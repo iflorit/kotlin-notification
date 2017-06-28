@@ -1,11 +1,8 @@
 package es.florit.kotlin.notification
 
 import android.app.Application
-import android.app.Notification
-import android.app.NotificationManager
-import android.content.Context
-import android.graphics.Color
-import android.support.v4.app.NotificationCompat
+import android.content.Intent
+import es.florit.kotlin.notification.services.NotificationService
 
 
 /**
@@ -13,23 +10,19 @@ import android.support.v4.app.NotificationCompat
  */
 class KotlinApplication : Application() {
 
-    var mNotificationManager: NotificationManager? = null
-
     override fun onCreate() {
         super.onCreate()
 
-        mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        onNotification()
+    }
 
-        val builder = NotificationCompat.Builder(
-                baseContext)
-                .setSmallIcon(android.R.drawable.ic_dialog_info)
-                .setContentTitle("Kotlin Notification")
-                .setContentText("Notificación activa")
-                .setWhen(System.currentTimeMillis())
-                .setLights(Color.MAGENTA, 10000, 0)
-                .setPriority(Notification.PRIORITY_MAX)
-                .setOngoing(true)
+    fun onNotification() {
+        val intent = Intent(this, NotificationService::class.java)
+        startService(intent)
+    }
 
-        mNotificationManager?.notify(1234567890, builder.build());
+    fun offNotification() {
+        val intent = Intent(this, NotificationService::class.java)
+        stopService(intent)
     }
 }
